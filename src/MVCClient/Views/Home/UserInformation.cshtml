@@ -1,0 +1,32 @@
+﻿@model UserInformationViewModel
+
+@{
+    ViewBag.Title = "User Information";
+    Layout = "_Layout";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <span>User name: </span>@Model.UserName
+</div>
+<div>
+    <h5>Claims</h5>
+    <table>
+        <thead>
+        <tr>
+            <td>Claim</td>
+            <td>Value</td>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var key in Model.Claims.Keys)
+        {
+            <tr>
+                <td>@key</td>
+                <td>@Model.Claims[key]</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
