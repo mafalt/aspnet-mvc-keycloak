@@ -1,0 +1,17 @@
+services:
+  keycloak:
+    build:
+      dockerfile: ./Infrastructure/Keycloak/Dockerfile
+      context: .
+    restart: always
+    ports:
+      - "8000:8080"
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: keycloakpw
+    volumes:
+      - keycloak_data:/var/lib/keycloak/data
+    
+
+volumes:
+  keycloak_data:

@@ -1,8 +1,10 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using MVCClient.Config;
 
 namespace MVCClient;
 
@@ -23,11 +25,14 @@ public static class HostingExtensions
             })
             .AddOpenIdConnect(options =>
             {
-                options.Authority = "http://localhost:8080/realms/playaround";
-                options.ClientId = "test";
-                options.ClientSecret = "D9ZUqKDS8m0owhSVpemG3w2z5y5cqG2O";
+                var config = new IdentityConfig();
+                builder.Configuration.GetSection("Identity").Bind(config);
+                
+                options.Authority = config.AuthorityUrl;
+                options.ClientId = config.ClientId;
+                options.ClientSecret = config.Secret;
                 options.ResponseType = OpenIdConnectResponseType.Code;
-                options.CallbackPath = "/login-callback";
+                options.CallbackPath = config.CallbackPath;
                 // options.CallbackPath = "/signin-oidc";
                 // options.SignedOutCallbackPath = "/signout-callback-oidc";
                 options.SaveTokens = true;
@@ -39,28 +44,6 @@ public static class HostingExtensions
                 {
                     NameClaimType = "name",
                     RoleClaimType = ClaimTypes.Role,
-                };
-
-                options.Events = new OpenIdConnectEvents()
-                {
-                    OnAuthorizationCodeReceived = ctx =>
-                    {
-                        Console.WriteLine("---> OnAuthorizationCodeReceived");
-                        return Task.CompletedTask;
-                    },
-                    OnMessageReceived = ctx =>
-                    {
-                        Console.WriteLine("---> OnMessageReceived");
-                        Console.WriteLine($"----> Token: {ctx.Token}");
-
-                        return Task.CompletedTask;
-                    },
-                    OnTokenValidated = ctx =>
-                    {
-                        Console.WriteLine("---> OnTokenValidated");
-                        Console.WriteLine($"----> Token: {ctx.SecurityToken.UnsafeToString()}");
-                        return Task.CompletedTask;
-                    }
                 };
             });
         
@@ -75,15 +58,6 @@ public static class HostingExtensions
 
         app.UseAuthentication();
         app.UseAuthorization();
-
-        // app.MapControllerRoute(
-        //     name: "default",
-        //     pattern: "{controller=Home}/{action=Index}/{id?}");
-
-        app.MapPost("/signin-oidc", async context =>
-        {
-            await context.Response.WriteAsync("Authentication successful");
-        });
 
         app.MapPost("/signout-callback-oidc", async context =>
         {

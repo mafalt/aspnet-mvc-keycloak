@@ -37,18 +37,7 @@ public class HomeController : Controller
     [Authorize]
     public IActionResult UserInformation()
     {
-        var currentUser = HttpContext.User;
-        var model = new UserInformationViewModel
-        {
-            UserName = currentUser.Identity?.Name ?? "Unknown User",
-        };
-        
-        foreach (var claim in currentUser.Claims)
-        {
-            model.Claims.Add(claim.Type, claim.Value);
-        }
-
-        return View(model);
+        return View();
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

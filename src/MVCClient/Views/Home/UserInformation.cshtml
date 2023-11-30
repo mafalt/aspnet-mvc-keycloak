@@ -1,6 +1,4 @@
-﻿@model UserInformationViewModel
-
-@{
+﻿@{
     ViewBag.Title = "User Information";
     Layout = "_Layout";
 }
@@ -8,11 +6,11 @@
 <h2>@ViewBag.Title</h2>
 
 <div>
-    <span>User name: </span>@Model.UserName
+    <span>User name: </span>@User.Identity.Name
 </div>
 <div>
     <h5>Claims</h5>
-    <table>
+    <table class="table table-striped table-hover">
         <thead>
         <tr>
             <td>Claim</td>
@@ -20,11 +18,11 @@
         </tr>
         </thead>
         <tbody>
-        @foreach (var key in Model.Claims.Keys)
+        @foreach (var claim in User.Claims)
         {
             <tr>
-                <td>@key</td>
-                <td>@Model.Claims[key]</td>
+                <td>@claim.Type</td>
+                <td>@claim.Value</td>
             </tr>
         }
         </tbody>
