@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using MVCClient.Config;
@@ -13,6 +12,7 @@ public static class HostingExtensions
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddControllersWithViews();
+        builder.Services.Configure<IdentityConfig>(builder.Configuration.GetSection("Identity"));
 
         builder.Services.AddAuthentication(options =>
             {
@@ -27,14 +27,13 @@ public static class HostingExtensions
             {
                 var config = new IdentityConfig();
                 builder.Configuration.GetSection("Identity").Bind(config);
-                
-                options.Authority = config.AuthorityUrl;
+
+                options.Authority = $"{config.AuthorityUrl}/realms/{config.Realm}";
                 options.ClientId = config.ClientId;
                 options.ClientSecret = config.Secret;
                 options.ResponseType = OpenIdConnectResponseType.Code;
                 options.CallbackPath = config.CallbackPath;
-                // options.CallbackPath = "/signin-oidc";
-                // options.SignedOutCallbackPath = "/signout-callback-oidc";
+                options.SignedOutCallbackPath = config.LogoutCallbackPath;
                 options.SaveTokens = true;
                 options.Scope.Add("openid");
                 options.Scope.Add("profile");
@@ -45,8 +44,17 @@ public static class HostingExtensions
                     NameClaimType = "name",
                     RoleClaimType = ClaimTypes.Role,
                 };
+
+                options.Events = new OpenIdConnectEvents
+                {
+                    OnTokenValidated = ctx =>
+                    {
+                        var token = ctx.SecurityToken.UnsafeToString();
+                        return Task.CompletedTask;
+                    }
+                };
             });
-        
+
         return builder.Build();
     }
 
@@ -59,23 +67,9 @@ public static class HostingExtensions
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.MapPost("/signout-callback-oidc", async context =>
-        {
-            await context.Response.WriteAsync("Sign-out successful");
-        });
-
-        app.UseEndpoints(endpoints =>
-        {
-            // Add endpoint for Keycloak authentication callback
-            endpoints.MapControllerRoute(
-                name: "login-callback",
-                pattern: "login-callback",
-                defaults: new { controller = "Account", action = "LoginCallback" });
-
-            endpoints.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-        });
+        app.MapControllerRoute(name: "login-callback", pattern: "login-callback", defaults: new { controller = "Account", action = "LoginCallback" });
+        app.MapControllerRoute(name: "logout-callback", pattern: "logout-callback", defaults: new { controller = "Account", action = "LogoutCallback" });
+        app.MapDefaultControllerRoute();
 
         return app;
     }

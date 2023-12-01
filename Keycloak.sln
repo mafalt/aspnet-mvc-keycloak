@@ -1,6 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCClient", "src\MVCClient\MVCClient.csproj", "{3205299F-D16B-4351-AC5E-4D0C33D4E0A6}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34309.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCClient", "src\MVCClient\MVCClient.csproj", "{3205299F-D16B-4351-AC5E-4D0C33D4E0A6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminApp", "src\AdminApp\AdminApp.csproj", "{15F9C762-6EBD-4987-828D-1B8AE784D76D}"
 EndProject
@@ -18,5 +21,11 @@ Global
 		{15F9C762-6EBD-4987-828D-1B8AE784D76D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15F9C762-6EBD-4987-828D-1B8AE784D76D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15F9C762-6EBD-4987-828D-1B8AE784D76D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D1AD5B88-07A3-426D-B384-CF7188DB4E52}
 	EndGlobalSection
 EndGlobal

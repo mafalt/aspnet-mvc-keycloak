@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCClient.Models;
@@ -35,7 +36,7 @@ public class HomeController : Controller
 
     [HttpGet("/UserInfo")]
     [Authorize]
-    public IActionResult UserInformation()
+    public async Task<IActionResult> UserInformation()
     {
         return View();
     }
