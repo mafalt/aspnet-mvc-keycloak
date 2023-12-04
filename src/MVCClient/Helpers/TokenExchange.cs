@@ -16,8 +16,8 @@ public class TokenExchange
     {
         var url = $"{_config.AuthorityUrl}/realms/{_config.Realm}/{_config.TokenExchange}";
         var grantType = "refresh_token";
-        var clientId = _config.ClientId;
-        var clientSecret = _config.Secret;
+        var clientId = "admin-cli"; //_config.ClientId;
+        var clientSecret = "gOoDBV9XKxNAxFR4nHuRqwDNvocKMCtZ"; // _config.Secret;
         var token = refreshToken;
 
         var form = new Dictionary<string, string>
@@ -52,8 +52,8 @@ public class TokenExchange
     {
         var url = $"{_config.AuthorityUrl}/realms/{_config.Realm}/{_config.TokenExchange}";
         var grantType = "urn:ietf:params:oauth:grant-type:token-exchange";
-        var clientId = _config.ClientId;
-        var clientSecret = _config.Secret;
+        var clientId = "admin-cli"; //_config.ClientId;
+        var clientSecret = "gOoDBV9XKxNAxFR4nHuRqwDNvocKMCtZ"; // _config.Secret;
         var audience = "mvc-client";
 
         var form = new Dictionary<string, string>

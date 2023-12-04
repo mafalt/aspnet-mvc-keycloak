@@ -8,6 +8,10 @@ using MVCClient.Config;
 using MVCClient.Helpers;
 using MVCClient.Models;
 using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using JsonConverter = Newtonsoft.Json.JsonConverter;
 
 namespace MVCClient.Controllers;
 
@@ -57,25 +61,29 @@ public class AccountController : Controller
         return RedirectToAction("Index", "Home");
     }
 
+
+    [Authorize(Roles = "admin")]
+    public void UserDetails(Guid id)
+    {
+        
+    }
+
     [Authorize(Roles = "admin")]
     public async Task<IActionResult> ListUsers()
     {
-        var exchange = new TokenExchange(_identityConfig);
-        var refreshToken = await HttpContext.GetTokenAsync("refresh_token");
-        var token = await exchange.GetRefreshTokenAsync(refreshToken);
-        var serviceAccessToken = await exchange.GetTokenExhangeAsync(token);
+        var accessToken = await HttpContext.GetTokenAsync("access_token");
 
         using var httpClient = new HttpClient();
-        //httpClient.BaseAddress = new Uri("http://localhost:8000/admin/realms/aspnet-core");
-        if (!string.IsNullOrEmpty(serviceAccessToken))
-        {
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        }
+        httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        httpClient.BaseAddress = new Uri("http://localhost:8000/admin/realms/aspnet-core");
 
-        var response = await httpClient.GetStringAsync("http://localhost:8000/admin/realms/aspnet-core/users");
+        // var response = await httpClient.GetStringAsync("http://localhost:8000/admin/realms/aspnet-core/users");
+        var response = await httpClient.GetStringAsync($"{httpClient.BaseAddress}/users");
 
-        var result = new UserListViewModel();
-
-        return View(result);
+        Console.WriteLine(response);
+        var deserializedData = JsonConvert.DeserializeObject<List<UserListViewModel>>(response); 
+        
+        return View(deserializedData ?? new List<UserListViewModel>());
     }
 }
