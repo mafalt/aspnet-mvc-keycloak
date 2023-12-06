@@ -1,0 +1,17 @@
+@if (!User.IsAuthenticated())
+{
+    <li class="nav-item">
+        <a class="btn btn-success px-3" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <div class="text-black p-2">
+            Welcome, <a asp-area="" asp-controller="Home" asp-action="UserInformation">@User.Identity.Name</a>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="btn btn-danger px-3" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+    </li>
+}

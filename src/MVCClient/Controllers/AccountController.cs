@@ -18,15 +18,18 @@ namespace MVCClient.Controllers;
 public class AccountController : Controller
 {
     private readonly IdentityConfig _identityConfig;
+    private readonly ILogger<AccountController> _logger;
 
-    public AccountController(IOptions<IdentityConfig> identityConfiguration)
+    public AccountController(IOptions<IdentityConfig> identityConfiguration, ILogger<AccountController> logger)
     {
+        _logger = logger;
         _identityConfig = identityConfiguration.Value;
     }
 
+    [Authorize]
     public IActionResult Login()
     {
-        return View();
+        return RedirectToAction("Index", "Home");
     }
 
     [Authorize]
@@ -68,11 +71,11 @@ public class AccountController : Controller
         
     }
 
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "r-admins")]
     public async Task<IActionResult> ListUsers()
     {
         var accessToken = await HttpContext.GetTokenAsync("access_token");
-
+        _logger.LogInformation(accessToken);
         using var httpClient = new HttpClient();
         httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);

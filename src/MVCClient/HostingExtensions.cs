@@ -44,15 +44,6 @@ public static class HostingExtensions
                     NameClaimType = "name",
                     RoleClaimType = ClaimTypes.Role,
                 };
-
-                options.Events = new OpenIdConnectEvents
-                {
-                    OnTokenValidated = ctx =>
-                    {
-                        var token = ctx.SecurityToken.UnsafeToString();
-                        return Task.CompletedTask;
-                    }
-                };
             });
 
         return builder.Build();
