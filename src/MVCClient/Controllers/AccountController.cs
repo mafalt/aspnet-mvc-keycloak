@@ -71,7 +71,7 @@ public class AccountController : Controller
         
     }
 
-    [Authorize(Roles = "r-admins")]
+    [Authorize(Roles = "r-admin")]
     public async Task<IActionResult> ListUsers()
     {
         var accessToken = await HttpContext.GetTokenAsync("access_token");

@@ -11,6 +11,8 @@ public static class ClaimsPrincipalExtensions
 
     public static bool IsRealmAdmin(this ClaimsPrincipal user)
     {
-        return false;
+        var result = user.IsAuthenticated() && user.Claims.Any(c => c is { Type: ClaimTypes.Role, Value: "r-admin" });
+        return result;
+        // return user.Claims.Any(c => c is { Type: ClaimTypes.Role, Value: "r-admin" });
     }
 }
