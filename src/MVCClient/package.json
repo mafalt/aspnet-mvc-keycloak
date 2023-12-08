@@ -1,0 +1,15 @@
+{
+  "name": "mvcclient",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "css:build": "npx tailwindcss -i ./wwwroot/css/tailwind.site.css -o ./wwwroot/css/styles.min.css --minify"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tailwindcss": "^3.3.6"
+  }
+}
